@@ -11,7 +11,7 @@ export async function geocoderAdresse(
     {
       headers: {
         // Nominatim exige d'identifier ton application (règle d'usage, gratuite quand même)
-        "User-Agent": "Clevia-App (contact@clevia.app)",
+        "User-Agent": "Opendoor-App (contact@opendoor.app)",
       },
     }
   );

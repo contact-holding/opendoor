@@ -125,3 +125,23 @@ export interface NotificationUtilisateur {
   lu: boolean;
   created_at: string;
 }
+
+export interface Avis {
+  id: string;
+  auteur_id: string;
+  note: number;
+  commentaire: string;
+  role_auteur: "locataire" | "proprietaire";
+  approuve: boolean;
+  created_at: string;
+  profil?: Profil;
+}
+
+export interface PointInteret {
+  id: string;
+  nom: string;
+  categorie: "universite" | "marche" | "hopital" | "gare_routiere" | "autre";
+  ville: string;
+  latitude: number;
+  longitude: number;
+}

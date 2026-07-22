@@ -19,7 +19,7 @@ export default function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2 font-display text-xl">
           <Key className="h-5 w-5 text-argile" strokeWidth={1.75} />
-          Clevia
+          Opendoor
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">

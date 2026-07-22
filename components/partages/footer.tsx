@@ -8,7 +8,7 @@ export default function Footer() {
         <div>
           <div className="flex items-center gap-2 font-display text-lg">
             <Key className="h-4 w-4 text-argile" strokeWidth={1.75} />
-            Clevia
+            Opendoor
           </div>
           <p className="mt-3 text-sm text-encre/70">
             La location, du premier contact à la remise des clés.
@@ -41,7 +41,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-ligne px-6 py-4 text-center text-xs text-encre/60">
-        © {new Date().getFullYear()} Clevia. Tous droits réservés.
+        © {new Date().getFullYear()} Opendoor. Tous droits réservés.
       </div>
     </footer>
   );

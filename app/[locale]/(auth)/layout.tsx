@@ -7,7 +7,7 @@ export default function LayoutAuth({ children }: { children: React.ReactNode }) 
       <div className="w-full max-w-md">
         <Link href="/" className="mb-8 flex items-center justify-center gap-2 font-display text-xl">
           <Key className="h-5 w-5 text-argile" strokeWidth={1.75} />
-          Clevia
+          Opendoor
         </Link>
         <div className="rounded-2xl border border-ligne bg-fond p-8 shadow-sm">
           {children}

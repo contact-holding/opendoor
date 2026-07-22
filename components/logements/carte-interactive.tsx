@@ -6,16 +6,29 @@ import Link from "next/link";
 import { formaterPrix } from "@/lib/utils";
 import type { Logement } from "@/types";
 
-// Correction nécessaire : l'icône par défaut de Leaflet ne se charge pas
-// correctement avec Next.js — on la redéfinit manuellement.
-const icone = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
+function creerPinAvecPrix(prix: number, survole: boolean) {
+  return L.divIcon({
+    className: "",
+    html: `
+      <div style="
+        background:${survole ? "#22333B" : "#BC5B39"};
+        color:#FBFAF6;
+        padding:6px 12px;
+        border-radius:9999px;
+        font-size:12px;
+        font-weight:600;
+        font-family: var(--font-donnees), monospace;
+        white-space:nowrap;
+        box-shadow:0 2px 6px rgba(0,0,0,0.25);
+        border:2px solid #FBFAF6;
+      ">
+        ${new Intl.NumberFormat("fr-FR").format(prix)} FCFA
+      </div>
+    `,
+    iconSize: undefined,
+    iconAnchor: [30, 15],
+  });
+}
 
 export default function CarteInteractive({ logements }: { logements: Logement[] }) {
   const logementsAvecPosition = logements.filter(
@@ -51,10 +64,10 @@ export default function CarteInteractive({ logements }: { logements: Logement[] 
           <Marker
             key={logement.id}
             position={[logement.latitude!, logement.longitude!]}
-            icon={icone}
+            icon={creerPinAvecPrix(logement.prix_mensuel, false)}
           >
             <Popup>
-              <Link href={`/logements/${logement.id}`} className="block">
+              <Link href={`/logements/${logement.id}`} className="block min-w-[160px]">
                 <p className="font-medium text-sm">{logement.titre}</p>
                 <p className="text-xs text-encre/60">
                   {logement.quartier}, {logement.ville}

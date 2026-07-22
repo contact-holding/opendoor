@@ -51,7 +51,7 @@ export default function PageContact() {
             <Mail className="mt-1 h-5 w-5 text-argile" />
             <div>
               <p className="text-sm font-medium">Email</p>
-              <p className="text-sm text-encre/70">contact@clevia.app</p>
+              <p className="text-sm text-encre/70">contact@Opendoor.app</p>
             </div>
           </div>
           <div className="flex items-start gap-3">

@@ -266,3 +266,67 @@ create policy "photos_logements_suppression_proprietaire"
 on storage.objects for delete
 to authenticated
 using (bucket_id = 'photos-logements' and owner = auth.uid());
+
+
+
+create table public.avis (
+  id uuid primary key default gen_random_uuid(),
+  auteur_id uuid not null references public.profils(id) on delete cascade,
+  note integer not null check (note >= 1 and note <= 5),
+  commentaire text not null,
+  role_auteur text not null check (role_auteur in ('locataire', 'proprietaire')),
+  approuve boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+alter table public.avis enable row level security;
+
+-- Lecture publique, mais uniquement des avis approuvés (modération avant affichage)
+create policy "avis_lecture_publique" on public.avis
+  for select using (approuve = true);
+
+-- Un utilisateur connecté peut créer son propre avis
+create policy "avis_creation_personnelle" on public.avis
+  for insert to authenticated
+  with check (auth.uid() = auteur_id);
+
+-- L'admin peut tout gérer (approbation) — géré via policy séparée si tu as un rôle admin identifiable
+create policy "avis_gestion_admin" on public.avis
+  for all using (
+    exists (
+      select 1 from public.profils
+      where profils.id = auth.uid() and profils.role = 'admin'
+    )
+  );
+
+
+
+  alter table public.logements
+  add column video_url text,
+  add column whatsapp text;
+
+
+
+  create table public.points_interet (
+  id uuid primary key default gen_random_uuid(),
+  nom text not null,
+  categorie text not null check (categorie in ('universite', 'marche', 'hopital', 'gare_routiere', 'autre')),
+  ville text not null,
+  latitude numeric(9,6) not null,
+  longitude numeric(9,6) not null
+);
+
+alter table public.points_interet enable row level security;
+
+create policy "points_interet_lecture_publique" on public.points_interet
+  for select using (true);
+
+
+  insert into public.points_interet (nom, categorie, ville, latitude, longitude) values
+  ('Université de Yaoundé I', 'universite', 'Yaoundé', 3.8667, 11.5017),
+  ('Marché Central', 'marche', 'Yaoundé', 3.8608, 11.5177),
+  ('Hôpital Central de Yaoundé', 'hopital', 'Yaoundé', 3.8698, 11.5213),
+  ('Agence Voyage Yaoundé', 'gare_routiere', 'Yaoundé', 3.8480, 11.5021),
+  ('Université de Douala', 'universite', 'Douala', 4.0611, 9.7043),
+  ('Marché Central Douala', 'marche', 'Douala', 4.0483, 9.7043),
+  ('Hôpital Laquintinie', 'hopital', 'Douala', 4.0430, 9.6980);
