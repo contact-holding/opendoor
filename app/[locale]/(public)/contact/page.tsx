@@ -198,7 +198,7 @@ export default function PageContact() {
               {envoye && (
                 <p className="flex items-center gap-2 text-sm text-mousse">
                   <CheckCircle2 className="h-4 w-4" />
-                  Message envoyé — nous répondons sous 48h.
+                  Message envoyé — nous répondons sous 48h merci.
                 </p>
               )}
             </form>
