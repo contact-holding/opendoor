@@ -6,6 +6,7 @@ import ChampTexte from "@/components/ui/champ-texte";
 import Select from "@/components/ui/select";
 import Bouton from "@/components/ui/bouton";
 import { creerClientNavigateur } from "@/lib/supabase/client";
+import { geocoderAdresse } from "@/lib/geocodage";
 import type { TypeLogement } from "@/types";
 import { UploadCloud, X } from "lucide-react";
 import Image from "next/image";
@@ -17,11 +18,25 @@ const typesLogement = [
   { valeur: "chambre", label: "Chambre" },
 ];
 
-export default function FormulaireLogement({ logementId }: { logementId?: string }) {
+const optionsPieces = [
+  { valeur: "general", label: "Générale" },
+  { valeur: "salon", label: "Salon" },
+  { valeur: "chambre", label: "Chambre" },
+  { valeur: "cuisine", label: "Cuisine" },
+  { valeur: "salle_de_bain", label: "Salle de bain" },
+  { valeur: "exterieur", label: "Extérieur" },
+];
+
+interface PhotoAvecPiece {
+  fichier: File;
+  piece: string;
+}
+
+export default function FormulaireLogement() {
   const router = useRouter();
   const [enregistrement, setEnregistrement] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
-  const [photosSelectionnees, setPhotosSelectionnees] = useState<File[]>([]);
+  const [photos, setPhotos] = useState<PhotoAvecPiece[]>([]);
 
   const [champs, setChamps] = useState({
     titre: "",
@@ -32,6 +47,8 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
     prix_mensuel: "",
     nombre_pieces: "",
     surface: "",
+    whatsapp: "",
+    video_url: "",
   });
 
   function gererChangement(nom: string, valeur: string) {
@@ -40,11 +57,21 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
 
   function gererAjoutPhotos(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) return;
-    setPhotosSelectionnees((precedent) => [...precedent, ...Array.from(e.target.files!)]);
+    const nouvelles = Array.from(e.target.files).map((fichier) => ({
+      fichier,
+      piece: "general",
+    }));
+    setPhotos((precedent) => [...precedent, ...nouvelles]);
+  }
+
+  function changerPiece(index: number, piece: string) {
+    setPhotos((precedent) =>
+      precedent.map((p, i) => (i === index ? { ...p, piece } : p))
+    );
   }
 
   function retirerPhoto(index: number) {
-    setPhotosSelectionnees((precedent) => precedent.filter((_, i) => i !== index));
+    setPhotos((precedent) => precedent.filter((_, i) => i !== index));
   }
 
   async function gererEnvoi(e: React.FormEvent) {
@@ -53,7 +80,6 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
     setEnregistrement(true);
 
     const supabase = creerClientNavigateur();
-
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -64,7 +90,8 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
       return;
     }
 
-    // 1. création du logement
+    const coordonnees = await geocoderAdresse(champs.quartier, champs.ville);
+
     const { data: logement, error: erreurLogement } = await supabase
       .from("logements")
       .insert({
@@ -77,6 +104,10 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
         prix_mensuel: Number(champs.prix_mensuel),
         nombre_pieces: Number(champs.nombre_pieces),
         surface: Number(champs.surface),
+        latitude: coordonnees?.latitude ?? null,
+        longitude: coordonnees?.longitude ?? null,
+        whatsapp: champs.whatsapp || null,
+        video_url: champs.video_url || null,
       })
       .select()
       .single();
@@ -87,10 +118,10 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
       return;
     }
 
-    // 2. envoi des photos dans Supabase Storage
-    for (let i = 0; i < photosSelectionnees.length; i++) {
-      const fichier = photosSelectionnees[i];
-      const cheminFichier = `${logement.id}/photo-${i + 1}-${Date.now()}.${fichier.name.split(".").pop()}`;
+    for (let i = 0; i < photos.length; i++) {
+      const { fichier, piece } = photos[i];
+      const cheminFichier =
+        logement.id + "/photo-" + (i + 1) + "-" + Date.now() + "." + fichier.name.split(".").pop();
 
       const { error: erreurUpload } = await supabase.storage
         .from("photos-logements")
@@ -105,12 +136,13 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
           logement_id: logement.id,
           url: urlPublique.publicUrl,
           ordre: i,
+          piece,
         });
       }
     }
 
     setEnregistrement(false);
-    router.push(`/proprietaire/mes-biens/${logement.id}`);
+    router.push("/proprietaire/mes-biens/" + logement.id);
   }
 
   return (
@@ -145,6 +177,7 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
           label="Ville"
           value={champs.ville}
           onChange={(e) => gererChangement("ville", e.target.value)}
+          placeholder="Douala, Kribi, Edéa…"
           required
         />
         <ChampTexte
@@ -174,6 +207,17 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
           onChange={(e) => gererChangement("surface", e.target.value)}
           required
         />
+        <ChampTexte
+          label="Numéro WhatsApp (avec indicatif, ex: 237600000000)"
+          value={champs.whatsapp}
+          onChange={(e) => gererChangement("whatsapp", e.target.value)}
+        />
+        <ChampTexte
+          label="Lien vidéo / visite 360° (optionnel)"
+          value={champs.video_url}
+          onChange={(e) => gererChangement("video_url", e.target.value)}
+          placeholder="Lien YouTube ou autre plateforme d'hébergement"
+        />
       </div>
 
       <div>
@@ -184,22 +228,40 @@ export default function FormulaireLogement({ logementId }: { logementId?: string
           <input type="file" accept="image/*" multiple hidden onChange={gererAjoutPhotos} />
         </label>
 
-        {photosSelectionnees.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-3">
-            {photosSelectionnees.map((fichier, index) => (
-              <div key={index} className="relative h-20 w-20 overflow-hidden rounded-lg">
-                <Image
-                  src={URL.createObjectURL(fichier)}
-                  alt=""
-                  fill
-                  className="object-cover"
-                />
+        {photos.length > 0 && (
+          <div className="mt-4 space-y-3">
+            {photos.map((photo, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-3 rounded-lg border border-ligne p-2"
+              >
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg">
+                  <Image
+                    src={URL.createObjectURL(photo.fichier)}
+                    alt=""
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+
+                <select
+                  value={photo.piece}
+                  onChange={(e) => changerPiece(index, e.target.value)}
+                  className="flex-1 rounded-lg border border-ligne px-3 py-2 text-sm outline-none focus:border-argile"
+                >
+                  {optionsPieces.map((option) => (
+                    <option key={option.valeur} value={option.valeur}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+
                 <button
                   type="button"
                   onClick={() => retirerPhoto(index)}
-                  className="absolute right-1 top-1 rounded-full bg-encre/70 p-0.5"
+                  className="shrink-0 rounded-full bg-encre/10 p-1.5 hover:bg-encre/20"
                 >
-                  <X className="h-3 w-3 text-fond" />
+                  <X className="h-4 w-4" />
                 </button>
               </div>
             ))}

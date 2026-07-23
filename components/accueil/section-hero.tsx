@@ -1,37 +1,42 @@
 import BarreRecherche from "@/components/accueil/barre-recherche";
+import { ShieldCheck, MessageCircle, Home } from "lucide-react";
 
 export default function SectionHero() {
   return (
-    <section className="relative overflow-hidden border-b border-ligne bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/images/hero.PNG')" }}>
-      {/* Voile sombre */}
-      <div className="absolute inset-0 bg-white/10"></div>
+    <section
+      className="relative bg-cover bg-center"
+      style={{ backgroundImage: "url('/images/hero.PNG')" }}
+    >
+      <div className="absolute inset-0 bg-encre/70" />
 
-      {/* Motif cadastral */}
-      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-10" aria-hidden="true">
-        <defs>
-          <pattern id="plan-cadastral" width="60" height="60" patternUnits="userSpaceOnUse">
-            <path d="M60 0H0V60" fill="none" stroke="#FFFFFF" strokeWidth="1" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#plan-cadastral)" />
-      </svg>
+      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
+        <span className="inline-block rounded-full bg-fond/10 px-4 py-1.5 text-sm text-fond backdrop-blur">
+          👋 Bienvenue
+        </span>
 
-      <div className="relative z-10 mx-auto max-w-6xl px-6 py-28 md:py-40">
-        <p className="mb-4 font-donnees text-xs uppercase tracking-[0.4em] bold text-orange-500">
-          Location & gestion, sans friction
-        </p>
-
-        <h1 className="max-w-3xl font-display text-4xl font-bold leading-tight text-white md:text-6xl">
-          Trouvez un logement.<br />
-          Gérez-le en confiance.
+        <h1 className="mt-5 font-display text-4xl text-fond md:text-6xl">
+          Où allez-vous ?
         </h1>
 
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/90">
-          Opendoor connecte locataires et propriétaires autour d'un parcours clair : recherche, contrat, suivi et gestion locative moderne, sans intermédiaire caché.
+        <p className="mt-4 max-w-xl text-fond/80">
+          Logements meublés et locations vérifiées à Douala, Kribi et Edéa,
+          proposés par des propriétaires de confiance.
         </p>
 
         <div className="mt-10 max-w-2xl">
           <BarreRecherche />
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center gap-6 text-sm text-fond/70">
+          <span className="flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4" /> Propriétaires vérifiés
+          </span>
+          <span className="flex items-center gap-2">
+            <Home className="h-4 w-4" /> 3 villes couvertes
+          </span>
+          <span className="flex items-center gap-2">
+            <MessageCircle className="h-4 w-4" /> Contact direct WhatsApp
+          </span>
         </div>
       </div>
     </section>

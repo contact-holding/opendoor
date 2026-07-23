@@ -2,72 +2,94 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import FiltreRecherche from "@/components/logements/filtre-recherche";
 import CarteLogement from "@/components/logements/carte-logement";
 import CarteInteractiveWrapper from "@/components/logements/carte-interactive-wrapper";
-import BasculeVue from "@/components/logements/bascule-vue";
-import type { Logement } from "@/types";
-
-// données fictives temporaires — un logement par chef-lieu de région
-const tousLesLogementsFictifs: Logement[] = [
-  { id: "1", titre: "Appartement lumineux, proche centre-ville", description: "", ville: "Yaoundé", quartier: "Bastos", adresse: null, prix_mensuel: 180000, type: "appartement", nombre_pieces: 3, surface: 75, photos: [], latitude: 4.0511, longitude: 9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-  { id: "2", titre: "Studio moderne meublé", description: "", ville: "Douala", quartier: "Akwa", adresse: null, prix_mensuel: 95000, type: "studio", nombre_pieces: 1, surface: 32, photos: [], latitude: 4.0511, longitude: 9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-  { id: "3", titre: "Maison familiale avec cour", description: "", ville: "Bafoussam", quartier: "Centre", adresse: null, prix_mensuel: 120000, type: "maison", nombre_pieces: 4, surface: 110, photos: [], latitude: 4.0511, longitude: 9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-  { id: "4", titre: "Chambre étudiante proche université", description: "", ville: "Bamenda", quartier: "Up Station", adresse: null, prix_mensuel: 40000, type: "chambre", nombre_pieces: 1, surface: 18, photos: [], latitude: 5.9631, longitude: 9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-  { id: "5", titre: "Appartement vue collines", description: "", ville: "Buea", quartier: "Molyko", adresse: null, prix_mensuel: 85000, type: "appartement", nombre_pieces: 2, surface: 55, photos: [], latitude: 4.0511, longitude: 9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-  { id: "6", titre: "Studio calme et lumineux", description: "", ville: "Ebolowa", quartier: "Centre-ville", adresse: null, prix_mensuel: 60000, type: "studio", nombre_pieces: 1, surface: 28, photos: [], latitude: 4.0511, longitude: 9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-  { id: "7", titre: "Maison spacieuse avec jardin", description: "", ville: "Bertoua", quartier: "Nkolbikon", adresse: null, prix_mensuel: 100000, type: "maison", nombre_pieces: 3, surface: 95, photos: [], latitude:4.0511, longitude: 9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-  { id: "8", titre: "Appartement proche marché central", description: "", ville: "Ngaoundéré", quartier: "Baladji", adresse: null, prix_mensuel: 70000, type: "appartement", nombre_pieces: 2, surface: 60, photos: [], latitude: 7.3167, longitude: 9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-  { id: "9", titre: "Chambre meublée sécurisée", description: "", ville: "Garoua", quartier: "Plateau", adresse: null, prix_mensuel: 35000, type: "chambre", nombre_pieces: 1, surface: 16, photos: [], latitude:4.0511, longitude:9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-  { id: "10", titre: "Studio proche centre administratif", description: "", ville: "Maroua", quartier: "Domayo", adresse: null, prix_mensuel: 50000, type: "studio", nombre_pieces: 1, surface: 25, photos: [], latitude: 4.0511, longitude: 9.7679, disponible: true, equipements: [], proprietaire_id: "temp", created_at: new Date().toISOString(), video_url: null, whatsapp: null },
-] as Logement[];
+import FiltreRecherche from "@/components/logements/filtre-recherche";
+import { logementsDemo } from "@/lib/donnees-demo";
+import { ShieldCheck, Smartphone, Lock, RotateCcw } from "lucide-react";
+import type { TypeLogement } from "@/types";
 
 export default function PageRecherche() {
   const searchParams = useSearchParams();
-  const villeRecherchee = searchParams.get("ville")?.toLowerCase().trim();
-  const [vue, setVue] = useState<"liste" | "carte">("liste");
+  const villeUrl = searchParams.get("ville")?.toLowerCase().trim();
 
-  const resultats = villeRecherchee
-    ? tousLesLogementsFictifs.filter((logement) =>
-        logement.ville.toLowerCase().includes(villeRecherchee)
-      )
-    : tousLesLogementsFictifs;
+  const [typeSelectionne, setTypeSelectionne] = useState<TypeLogement | null>(null);
+  const [prixMax, setPrixMax] = useState(500000);
+
+  const resultats = logementsDemo.filter((logement) => {
+    const correspondVille = villeUrl
+      ? logement.ville.toLowerCase().includes(villeUrl) ||
+        logement.quartier.toLowerCase().includes(villeUrl)
+      : true;
+    const correspondType = typeSelectionne ? logement.type === typeSelectionne : true;
+    const correspondPrix = logement.prix_mensuel <= prixMax;
+    return correspondVille && correspondType && correspondPrix;
+  });
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-10">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl">
-            {searchParams.get("ville")
-              ? `Logements à ${searchParams.get("ville")}`
-              : "Tous les logements disponibles"}
-          </h1>
-          <p className="mt-1 text-sm text-encre/60">{resultats.length} résultat(s)</p>
+    <div>
+      {/* Barre sticky en haut, comme Booking */}
+      <div className="sticky top-[64px] z-30 border-b border-ligne bg-fond">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-6 py-4">
+          <input
+            type="text"
+            defaultValue={searchParams.get("ville") ?? ""}
+            placeholder="Ville ou quartier"
+            className="flex-1 rounded-full border border-ligne px-4 py-2.5 text-sm outline-none focus:border-argile"
+          />
+          <button className="rounded-full bg-encre px-6 py-2.5 text-sm font-medium text-fond">
+            Rechercher
+          </button>
         </div>
 
-        <BasculeVue vue={vue} onChangerVue={setVue} />
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-6 px-6 pb-4 text-xs text-encre/60">
+          <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> Propriétaires vérifiés</span>
+          <span className="flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5" /> Contact direct WhatsApp</span>
+          <span className="flex items-center gap-1.5"><Lock className="h-3.5 w-3.5" /> Aucune donnée bancaire requise</span>
+          <span className="flex items-center gap-1.5"><RotateCcw className="h-3.5 w-3.5" /> Visite en présentiel</span>
+        </div>
       </div>
 
-      <div className="mt-8 flex flex-col gap-8 md:flex-row">
-        <FiltreRecherche />
+      <div className="mx-auto max-w-6xl px-6 py-6">
+        <h1 className="font-display text-2xl">
+          {searchParams.get("ville")
+            ? "Logements à " + searchParams.get("ville")
+            : "Logements à Douala, Kribi et Edéa"}
+        </h1>
+        <p className="mt-1 text-sm text-encre/60">{resultats.length} bien(s) disponible(s)</p>
+      </div>
 
-        <div className="flex-1">
+      {/* Colonne liste (défile) + carte (fixe), comme Booking */}
+      <div className="mx-auto flex max-w-[1600px] gap-0 px-6 pb-16">
+        <div className="w-full lg:w-[55%]">
+          <div className="mb-4">
+            <FiltreRecherche
+              typeSelectionne={typeSelectionne}
+              onChangerType={setTypeSelectionne}
+              prixMax={prixMax}
+              onChangerPrixMax={setPrixMax}
+              horizontal
+            />
+          </div>
+
           {resultats.length === 0 ? (
             <p className="rounded-2xl border border-dashed border-ligne p-8 text-center text-sm text-encre/60">
-              Aucun logement trouvé pour cette ville. Essayez : Yaoundé, Douala,
-              Bafoussam, Bamenda, Buea, Ebolowa, Bertoua, Ngaoundéré, Garoua ou Maroua.
+              Aucun logement ne correspond à ces critères.
             </p>
-          ) : vue === "liste" ? (
+          ) : (
             <div className="grid gap-6 sm:grid-cols-2">
               {resultats.map((logement) => (
                 <CarteLogement key={logement.id} logement={logement} />
               ))}
             </div>
-          ) : (
-            <div className="h-[600px]">
-              <CarteInteractiveWrapper logements={resultats} />
-            </div>
           )}
+        </div>
+
+        {/* Carte sticky, visible uniquement en grand écran, comme Booking */}
+        <div className="hidden lg:block lg:w-[45%]">
+          <div className="sticky top-[180px] h-[calc(100vh-200px)]">
+            <CarteInteractiveWrapper logements={resultats} />
+          </div>
         </div>
       </div>
     </div>

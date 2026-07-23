@@ -5,6 +5,7 @@ export type StatutIncident = "signale" | "pris_en_charge" | "resolu";
 export type StatutLitige = "ouvert" | "en_cours" | "resolu";
 export type StatutLoyer = "en_attente" | "recu";
 export type Urgence = "faible" | "normale" | "urgente";
+export type CategoriePointInteret = "universite" | "marche" | "hopital" | "gare_routiere" | "autre";
 
 export interface Profil {
   id: string;
@@ -32,6 +33,8 @@ export interface Logement {
   nombre_pieces: number;
   surface: number;
   disponible: boolean;
+  video_url: string | null;
+  whatsapp: string | null;
   created_at: string;
   photos?: PhotoLogement[];
   equipements?: EquipementLogement[];
@@ -140,8 +143,16 @@ export interface Avis {
 export interface PointInteret {
   id: string;
   nom: string;
-  categorie: "universite" | "marche" | "hopital" | "gare_routiere" | "autre";
+  categorie: CategoriePointInteret;
   ville: string;
   latitude: number;
   longitude: number;
+}
+
+export interface PhotoLogement {
+  id: string;
+  logement_id: string;
+  url: string;
+  ordre: number;
+  piece: "salon" | "chambre" | "cuisine" | "salle_de_bain" | "exterieur" | "general";
 }

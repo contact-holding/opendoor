@@ -1,39 +1,32 @@
-import { FileCheck2, MessageCircle, ShieldCheck } from "lucide-react";
+import { ShieldCheck, Smartphone, Lock, RotateCcw, Star } from "lucide-react";
 
 const avantages = [
-  {
-    icone: FileCheck2,
-    titre: "Contrats clairs",
-    texte: "Baux générés et signés électroniquement, sans paperasse égarée.",
-  },
-  {
-    icone: MessageCircle,
-    titre: "Communication directe",
-    texte: "Locataires et propriétaires échangent sans intermédiaire.",
-  },
-  {
-    icone: ShieldCheck,
-    titre: "Suivi transparent",
-    texte: "Historique des loyers et des incidents, toujours consultable.",
-  },
+  { icone: ShieldCheck, label: "Propriétaires vérifiés" },
+  { icone: Smartphone, label: "Contact direct WhatsApp" },
+  { icone: Lock, label: "Aucune donnée bancaire requise" },
+  { icone: RotateCcw, label: "Visite en présentiel" },
 ];
 
 export default function SectionAvantages() {
   return (
-    <section className="border-y border-ligne bg-sable/40">
-      <div className="mx-auto max-w-6xl px-6 py-20">
-        <h2 className="max-w-md font-display text-3xl">
-          Pensé pour simplifier chaque étape de la location
-        </h2>
-
-        <div className="mt-12 grid gap-10 md:grid-cols-3">
-          {avantages.map(({ icone: Icone, titre, texte }) => (
-            <div key={titre}>
-              <Icone className="h-6 w-6 text-argile" strokeWidth={1.5} />
-              <h3 className="mt-4 font-display text-xl">{titre}</h3>
-              <p className="mt-2 text-sm text-encre/70">{texte}</p>
-            </div>
+    <section className="border-y border-ligne bg-fond">
+      <div className="mx-auto max-w-6xl px-6 py-6">
+        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+          {avantages.map(({ icone: Icone, label }) => (
+            <span key={label} className="flex items-center gap-2 text-sm text-encre/70">
+              <Icone className="h-4 w-4 text-argile" />
+              {label}
+            </span>
           ))}
+        </div>
+
+        <div className="mt-4 flex items-center justify-center gap-1.5 text-sm text-encre/60">
+          <div className="flex">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star key={i} className="h-4 w-4 fill-argile text-argile" />
+            ))}
+          </div>
+          Noté 4,7/5 par nos utilisateurs
         </div>
       </div>
     </section>

@@ -11,7 +11,7 @@ export default function CarteLogement({ logement }: { logement: Logement }) {
       <Carte className="group overflow-hidden transition-shadow hover:shadow-md">
         <div className="relative h-48 w-full overflow-hidden bg-sable">
           <Image
-            src={logement.photos[0] ?? "/images/placeholders/logement-defaut.jpg"}
+            src={logement.photos?.[0]?.url ?? "/images/placeholders/logement-defaut.jpg"}
             alt={logement.titre}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"

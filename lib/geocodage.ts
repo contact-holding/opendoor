@@ -1,17 +1,13 @@
-export async function geocoderAdresse(
-  quartier: string,
-  ville: string
-): Promise<{ latitude: number; longitude: number } | null> {
-  const adresseComplete = `${quartier}, ${ville}, Cameroun`;
-
+export async function geocoderLieu(
+  recherche: string
+): Promise<{ latitude: number; longitude: number; libelle: string } | null> {
   const reponse = await fetch(
-    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-      adresseComplete
-    )}&format=json&limit=1`,
+    "https://nominatim.openstreetmap.org/search?q=" +
+      encodeURIComponent(recherche + ", Cameroun") +
+      "&format=json&limit=1&countrycodes=cm",
     {
       headers: {
-        // Nominatim exige d'identifier ton application (règle d'usage, gratuite quand même)
-        "User-Agent": "Opendoor-App (contact@opendoor.app)",
+        "User-Agent": "OpenDoor-App (contact@opendoor.app)",
       },
     }
   );
@@ -23,5 +19,15 @@ export async function geocoderAdresse(
   return {
     latitude: parseFloat(donnees[0].lat),
     longitude: parseFloat(donnees[0].lon),
+    libelle: donnees[0].display_name,
   };
+}
+
+export async function geocoderAdresse(
+  quartier: string,
+  ville: string
+): Promise<{ latitude: number; longitude: number } | null> {
+  const resultat = await geocoderLieu(quartier + ", " + ville);
+  if (!resultat) return null;
+  return { latitude: resultat.latitude, longitude: resultat.longitude };
 }
