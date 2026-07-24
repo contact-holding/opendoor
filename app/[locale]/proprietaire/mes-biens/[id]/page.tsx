@@ -1,5 +1,5 @@
 import { creerClientServeur } from "@/lib/supabase/serveur";
-import GaleriePhotos from "@/components/logements/galerie-photos";
+import GalerieParPiece from "@/components/logements/galerie-par-piece";
 import FicheCaracteristiques from "@/components/logements/fiche-caracteristiques";
 import BadgeStatut from "@/components/ui/badge-statut";
 import { formaterPrix } from "@/lib/utils";
@@ -30,9 +30,10 @@ export default async function PageDetailBien({ params }: { params: { id: string 
       </p>
 
       <div className="mt-6">
-        <GaleriePhotos
-          photos={logementType.photos?.map((p) => p.url) ?? []}
+        <GalerieParPiece
+          photos={logementType.photos ?? []}
           titre={logementType.titre}
+          videoUrl={logementType.video_url}
         />
       </div>
 
