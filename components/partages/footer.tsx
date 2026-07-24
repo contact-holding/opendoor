@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import BadgesPaiement from "@/components/partages/badges-paiement";
 
 function IconeFacebook() {
   return (
@@ -10,7 +11,6 @@ function IconeFacebook() {
     </svg>
   );
 }
-
 function IconeInstagram() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -20,7 +20,6 @@ function IconeInstagram() {
     </svg>
   );
 }
-
 function IconeTwitter() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
@@ -28,7 +27,6 @@ function IconeTwitter() {
     </svg>
   );
 }
-
 function IconeYoutube() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
@@ -64,16 +62,19 @@ export default function Footer() {
         </div>
       </div>
 
+     <div className="border-b border-fond/10">
+  <div className="mx-auto max-w-6xl px-1 py-10">
+    <BadgesPaiement />
+  </div>
+</div>
+
       <div className="border-b border-fond/10">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-6">
           <div>
             <p className="font-display text-lg">Publier un bien</p>
             <p className="mt-1 text-sm text-fond/60">Rentabilisez votre logement.</p>
           </div>
-          <Link
-            href={base + "/inscription"}
-            className="rounded-full bg-fond px-6 py-2.5 text-sm font-medium text-encre"
-          >
+          <Link href={base + "/inscription"} className="rounded-full bg-fond px-6 py-2.5 text-sm font-medium text-encre">
             Publier un bien →
           </Link>
         </div>
@@ -81,25 +82,20 @@ export default function Footer() {
 
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2 font-display text-lg">
-            <img src="/images/accueil/icone-opendoor.png" alt="Open Doors" className="h-6 w-6" />
-            Open Doors
-          </div>
+          <img src="/images/accueil/icone-opendoor.png" alt="Open Doors" className="h-14 w-auto" />
           <p className="mt-3 text-sm text-fond/60">
             Trouvez votre logement idéal au Cameroun.
           </p>
           <div className="mt-4 flex gap-3 text-fond/60">
-            <IconeFacebook />
-            <IconeInstagram />
-            <IconeTwitter />
-            <IconeYoutube />
+            <a href="#" aria-label="Facebook"><IconeFacebook /></a>
+            <a href="#" aria-label="Instagram"><IconeInstagram /></a>
+            <a href="#" aria-label="Twitter"><IconeTwitter /></a>
+            <a href="#" aria-label="YouTube"><IconeYoutube /></a>
           </div>
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide">
-            Explorer par ville
-          </h4>
+          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide">Explorer par ville</h4>
           <ul className="space-y-2 text-sm text-fond/60">
             <li><Link href={base + "/recherche?ville=Douala"}>Douala</Link></li>
             <li><Link href={base + "/recherche?ville=Kribi"}>Kribi</Link></li>
@@ -108,14 +104,10 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide">
-            Explorer par catégorie
-          </h4>
+          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide">Explorer par catégorie</h4>
           <ul className="space-y-2 text-sm text-fond/60">
-            <li><Link href={base + "/recherche"}>Appartements</Link></li>
-            <li><Link href={base + "/recherche"}>Studios</Link></li>
-            <li><Link href={base + "/recherche"}>Maisons</Link></li>
-            <li><Link href={base + "/recherche"}>Chambres</Link></li>
+            <li><Link href={base + "/louer-un-logement"}>Louer un logement</Link></li>
+            <li><Link href={base + "/acheter-une-maison"}>Acheter une maison</Link></li>
           </ul>
         </div>
 

@@ -8,11 +8,14 @@ export async function middleware(requete: NextRequest) {
   const chemin = requete.nextUrl.pathname;
 
   const langueDejaPresente = languesSupportees.some(
-    (langue) => chemin.startsWith(`/${langue}/`) || chemin === `/${langue}`
+    (langue) => chemin.startsWith("/" + langue + "/") || chemin === "/" + langue
   );
 
   if (!langueDejaPresente) {
-    const nouvelleUrl = new URL(`/${langueParDefaut}${chemin}`, requete.url);
+    const nouvelleUrl = new URL(
+      "/" + langueParDefaut + chemin + requete.nextUrl.search,
+      requete.url
+    );
     return NextResponse.redirect(nouvelleUrl);
   }
 
@@ -27,9 +30,7 @@ export async function middleware(requete: NextRequest) {
           return requete.cookies.getAll();
         },
         setAll(cookiesAEnregistrer) {
-          cookiesAEnregistrer.forEach(({ name, value }) =>
-            requete.cookies.set(name, value)
-          );
+          cookiesAEnregistrer.forEach(({ name, value }) => requete.cookies.set(name, value));
           reponse = NextResponse.next({ request: requete });
           cookiesAEnregistrer.forEach(({ name, value, options }) =>
             reponse.cookies.set(name, value, options)
@@ -45,12 +46,10 @@ export async function middleware(requete: NextRequest) {
 
   const espacesProteges = ["/locataire", "/proprietaire", "/admin"];
   const cheminSansLangue = "/" + chemin.split("/").slice(2).join("/");
-  const estEspaceProtege = espacesProteges.some((espace) =>
-    cheminSansLangue.startsWith(espace)
-  );
+  const estEspaceProtege = espacesProteges.some((espace) => cheminSansLangue.startsWith(espace));
 
   if (estEspaceProtege && !user) {
-    const urlConnexion = new URL(`/${langueParDefaut}/connexion`, requete.url);
+    const urlConnexion = new URL("/" + langueParDefaut + "/connexion", requete.url);
     return NextResponse.redirect(urlConnexion);
   }
 

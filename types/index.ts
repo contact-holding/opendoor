@@ -156,3 +156,53 @@ export interface PhotoLogement {
   ordre: number;
   piece: "salon" | "chambre" | "cuisine" | "salle_de_bain" | "exterieur" | "general";
 }
+
+export interface Logement {
+  id: string;
+  proprietaire_id: string;
+  titre: string;
+  description: string;
+  type: TypeLogement;
+  ville: string;
+  quartier: string;
+  adresse: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  prix_mensuel: number;
+  nombre_pieces: number;
+  surface: number;
+  disponible: boolean;
+  video_url: string | null;
+  whatsapp: string | null;
+  promo?: string | null;
+  created_at: string;
+  photos?: PhotoLogement[];
+  equipements?: EquipementLogement[];
+}
+
+export interface Logement {
+  id: string;
+  proprietaire_id: string;
+  titre: string;
+  description: string;
+  type: TypeLogement;
+  ville: string;
+  quartier: string;
+  adresse: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  prix_mensuel: number;
+  nombre_pieces: number;
+  surface: number;
+  disponible: boolean;
+  video_url: string | null;
+  whatsapp: string | null;
+  promo?: string | null;
+  argumentMarketing?: string | null;
+  note?: number;
+  nombreAvis?: number;
+  vedette?: boolean;
+  created_at: string;
+  photos?: PhotoLogement[];
+  equipements?: EquipementLogement[];
+}

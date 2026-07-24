@@ -1,5 +1,6 @@
 import BarreRecherche from "@/components/accueil/barre-recherche";
 import { ShieldCheck, MessageCircle, Home } from "lucide-react";
+import TexteDefilant from "@/components/accueil/texte-defilant";
 
 export default function SectionHero() {
   return (
@@ -18,10 +19,9 @@ export default function SectionHero() {
           Où allez-vous ?
         </h1>
 
-        <p className="mt-4 max-w-xl text-fond/80">
-          Logements meublés et locations vérifiées à Douala, Kribi et Edéa,
-          proposés par des propriétaires de confiance.
-        </p>
+        <div className="mt-4 max-w-xl">
+       <TexteDefilant />
+       </div>
 
         <div className="mt-10 max-w-2xl">
           <BarreRecherche />

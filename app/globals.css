@@ -2,13 +2,13 @@
 @import "leaflet/dist/leaflet.css";
 
 @theme {
-  --color-fond: #FBFAF6;
-  --color-encre: #22333B;
-  --color-argile: #BC5B39;
-  --color-argile-fonce: #9C4527;
-  --color-mousse: #5B6B4F;
-  --color-sable: #E4D8C3;
-  --color-ligne: #D8CFC0;
+  --color-fond: #FFFFFF;
+  --color-encre: #1E1B2E;
+  --color-argile: #6118A5;
+  --color-argile-fonce: #4C1385;
+  --color-mousse: #2E9E5B;
+  --color-sable: #F3EAFB;
+  --color-ligne: #E5E1EC;
 
   --font-display: "Fraunces", serif;
   --font-corps: "Work Sans", sans-serif;
