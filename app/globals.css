@@ -20,3 +20,15 @@ body {
   color: var(--color-encre);
   font-family: var(--font-corps);
 }
+@keyframes defilement-avis {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-defilement-avis {
+  animation: defilement-avis 35s linear infinite;
+}

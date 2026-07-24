@@ -1,7 +1,6 @@
 import GalerieParPiece from "@/components/logements/galerie-par-piece";
 import FicheCaracteristiques from "@/components/logements/fiche-caracteristiques";
-import CarteInteractiveWrapper from "@/components/logements/carte-interactive-wrapper";
-import ItineraireWrapper from "@/components/logements/itineraire-wrapper";
+import CarteLogementItineraireWrapper from "@/components/logements/carte-logement-itineraire-wrapper";
 import CalendrierDisponibilite from "@/components/logements/calendrier-disponibilite";
 import SectionEquipements from "@/components/logements/section-equipements";
 import PointsForts from "@/components/logements/points-forts";
@@ -55,18 +54,9 @@ export default function PageLogement({ params }: { params: { id: string } }) {
 
           <SectionEquipements />
 
-          <div className="grid gap-6 sm:grid-cols-2">
-            <CalendrierDisponibilite disponible={logement.disponible} />
-            <ItineraireWrapper
-              latitudeLogement={logement.latitude!}
-              longitudeLogement={logement.longitude!}
-            />
-          </div>
+          <CalendrierDisponibilite disponible={logement.disponible} />
 
-          <div>
-            <h2 className="mb-3 font-display text-lg">Localisation</h2>
-            <CarteInteractiveWrapper logements={[logement]} />
-          </div>
+          <CarteLogementItineraireWrapper logement={logement} />
 
           <div>
             <h2 className="mb-3 font-display text-lg">Règles et fonctionnement</h2>

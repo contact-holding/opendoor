@@ -16,21 +16,9 @@ const statistiques = [
 ];
 
 const etapes = [
-  {
-    numero: "01",
-    titre: "Vous cherchez",
-    texte: "Parcourez des logements vérifiés à Douala, Kribi et Edéa, filtrés par ville, quartier et budget.",
-  },
-  {
-    numero: "02",
-    titre: "Vous contactez",
-    texte: "Échangez directement avec le propriétaire par WhatsApp, sans intermédiaire caché ni commission surprise.",
-  },
-  {
-    numero: "03",
-    titre: "Vous visitez, vous signez",
-    texte: "La visite et la signature du bail se font en présentiel, en toute confiance, avec un accompagnement à chaque étape.",
-  },
+  { numero: "01", titre: "Vous cherchez", texte: "Parcourez des logements vérifiés à Douala, Kribi et Edéa, filtrés par ville, quartier et budget." },
+  { numero: "02", titre: "Vous contactez", texte: "Échangez directement avec le propriétaire par WhatsApp, sans intermédiaire caché ni commission surprise." },
+  { numero: "03", titre: "Vous visitez, vous signez", texte: "La visite et la signature du bail se font en présentiel, en toute confiance." },
 ];
 
 const piliers = [
@@ -42,9 +30,21 @@ const piliers = [
 export default function PageAPropos() {
   return (
     <div>
-      {/* HERO avec motif cadastral, cohérent avec l'accueil */}
-      <section className="relative overflow-hidden border-b border-ligne bg-encre">
-        <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.06]" aria-hidden="true">
+      {/* HERO avec vidéo en arrière-plan */}
+      <section className="relative overflow-hidden border-b border-ligne">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src="/images/accueil/apropos.mp4" type="video/mp4" />
+        </video>
+
+        <div className="absolute inset-0 bg-encre/80" />
+
+        <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.08]" aria-hidden="true">
           <defs>
             <pattern id="plan-cadastral-apropos" width="60" height="60" patternUnits="userSpaceOnUse">
               <path d="M60 0H0V60" fill="none" stroke="#FBFAF6" strokeWidth="1" />
@@ -53,7 +53,7 @@ export default function PageAPropos() {
           <rect width="100%" height="100%" fill="url(#plan-cadastral-apropos)" />
         </svg>
 
-        <div className="relative mx-auto max-w-5xl px-6 py-24 md:py-28">
+        <div className="relative z-10 mx-auto max-w-5xl px-6 py-24 md:py-28">
           <p className="font-donnees text-xs uppercase tracking-[0.2em] text-argile">
             À propos d&apos;Open Doors
           </p>
@@ -82,18 +82,15 @@ export default function PageAPropos() {
 
       {/* COMMENT ÇA MARCHE */}
       <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="font-donnees text-xs uppercase tracking-[0.2em] text-argile">
-          Le parcours
-        </p>
+        <p className="font-donnees text-xs uppercase tracking-[0.2em] text-argile">Le parcours</p>
         <h2 className="mt-2 font-display text-3xl">Comment ça marche</h2>
 
         <div className="mt-12 grid gap-8 md:grid-cols-3">
           {etapes.map((etape, index) => (
             <div key={etape.numero} className="relative">
-              <span className="font-display text-6xl text-sable">{etape.numero}</span>
+              <span className="font-display text-6xl text-slate ">{etape.numero}</span>
               <h3 className="mt-2 font-display text-xl">{etape.titre}</h3>
-              <p className="mt-2 text-sm text-encre/70">{etape.texte}</p>
-
+              <p className="mt-2 text-sm text-encre/80">{etape.texte}</p>
               {index < etapes.length - 1 && (
                 <div className="absolute right-[-1rem] top-8 hidden h-px w-8 bg-ligne md:block" />
               )}
@@ -102,12 +99,10 @@ export default function PageAPropos() {
         </div>
       </section>
 
-      {/* PILIERS avec effet de survol conservé, mais dans la palette de marque */}
+      {/* PILIERS */}
       <section className="border-y border-ligne bg-sable/40">
         <div className="mx-auto max-w-6xl px-6 py-20">
-          <p className="font-donnees text-xs uppercase tracking-[0.2em] text-argile">
-            Nos engagements
-          </p>
+          <p className="font-donnees text-xs uppercase tracking-[0.2em] text-argile">Nos engagements</p>
           <h2 className="mt-2 font-display text-3xl">Ce qui nous distingue</h2>
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -117,10 +112,7 @@ export default function PageAPropos() {
                 className="group rounded-2xl border border-ligne bg-fond p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-argile/10 transition-colors group-hover:bg-argile">
-                  <Icone
-                    className="h-6 w-6 text-argile transition-colors group-hover:text-fond"
-                    strokeWidth={1.8}
-                  />
+                  <Icone className="h-6 w-6 text-argile transition-colors group-hover:text-fond" strokeWidth={1.8} />
                 </div>
                 <h3 className="mt-5 font-display text-xl">{titre}</h3>
                 <p className="mt-2 text-sm text-encre/70">{texte}</p>
@@ -130,21 +122,16 @@ export default function PageAPropos() {
         </div>
       </section>
 
-      {/* CONFIANCE / couverture */}
+      {/* CONFIANCE */}
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="grid gap-10 md:grid-cols-2 md:items-center">
           <div>
-            <p className="font-donnees text-xs uppercase tracking-[0.2em] text-argile">
-              Notre présence
-            </p>
-            <h2 className="mt-2 font-display text-3xl">
-              Ancrés localement, pensés pour le Cameroun
-            </h2>
+            <p className="font-donnees text-xs uppercase tracking-[0.2em] text-argile">Notre présence</p>
+            <h2 className="mt-2 font-display text-3xl">Ancrés localement, pensés pour le Cameroun</h2>
             <p className="mt-4 text-sm leading-6 text-encre/70">
               Open Doors se concentre volontairement sur Douala, Kribi et
               Edéa — pour bien connaître chaque quartier, vérifier chaque
-              bien sur place, et garantir un accompagnement humain plutôt
-              qu&apos;une plateforme anonyme.
+              bien sur place, et garantir un accompagnement humain.
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-4">
@@ -164,11 +151,7 @@ export default function PageAPropos() {
           </div>
 
           <div className="relative h-72 overflow-hidden rounded-2xl md:h-80">
-            <img
-              src="/images/accueil/appartement1.PNG"
-              alt="Logement Open Doors"
-              className="h-full w-full object-cover"
-            />
+            <img src="/images/accueil/appartement1.PNG" alt="Logement Open Doors" className="h-full w-full object-cover" />
           </div>
         </div>
       </section>
